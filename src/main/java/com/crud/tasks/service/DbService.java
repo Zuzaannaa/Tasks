@@ -4,15 +4,22 @@ import com.crud.tasks.domain.Task;
 import com.crud.tasks.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-@Component
+@Service
 public class DbService {
     @Autowired
     private TaskRepository repository;
 
     public List<Task> getAllTasks(){
         return repository.findAll();
+    }
+
+    public Optional<Task> getOneTask(final Long id){
+        return repository.findById(id);
+
     }
 }
