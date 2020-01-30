@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
+
 @Component
 public class TrelloClient {
 
@@ -33,13 +35,15 @@ public class TrelloClient {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/zuzannalubben/boards")
                 .queryParam("key", trelloAppKey)
                 .queryParam("token", trelloAppToken)
-                .queryParam("fields", "name, id").build().encode().toUri();
+                .queryParam("fields", "name, id")
+                .queryParam("lists", "all").build().encode().toUri();
 
         return url;
     }
 
     public Optional<List<TrelloBoardDto>> getTrelloBoards() {
         TrelloBoardDto[] boardsResponse = restTemplate.getForObject(getUrl(), TrelloBoardDto[].class);
-        return Optional.ofNullable(Arrays.asList(boardsResponse));
+        return Optional.of(Arrays.asList(ofNullable(boardsResponse).orElse(new TrelloBoardDto[0])));
+        //return Optional.ofNullable(Arrays.asList(boardsResponse));
     }
 }
