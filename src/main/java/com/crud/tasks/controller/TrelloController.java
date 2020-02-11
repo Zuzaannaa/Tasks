@@ -1,3 +1,4 @@
+
 package com.crud.tasks.controller;
 
 import com.crud.tasks.domain.TrelloBoardDto;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v/v1/trello")
+@RequestMapping("/v1/trello")
 public class TrelloController {
 
     @Autowired
@@ -18,9 +19,9 @@ public class TrelloController {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "getTrelloBoards")
-    public void getTrelloBoards() throws TrelloNotFoundException {
+    public List<TrelloBoardDto> getTrelloBoards() throws TrelloNotFoundException {
         // GET request
-        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoards().orElseThrow(TrelloNotFoundException::new);
+        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoards();
 
         trelloBoards.forEach(trelloBoardDto -> {
             System.out.println(trelloBoardDto.getName() + " - " + trelloBoardDto.getId());
@@ -29,8 +30,9 @@ public class TrelloController {
                     System.out.println(trelloList.getName() + " - " + trelloList.getId() + " - " + trelloList.isClosed()));
 
         });
+        return trelloBoards;
     }
 
-
-
 }
+
+
