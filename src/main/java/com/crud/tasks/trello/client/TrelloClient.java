@@ -1,9 +1,13 @@
 package com.crud.tasks.trello.client;
 
+import com.crud.tasks.controller.TrelloNotFoundException;
+import com.crud.tasks.domain.CreatedTrelloCard;
 import com.crud.tasks.domain.TrelloBoardDto;
+import com.crud.tasks.domain.TrelloCardDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,7 +22,7 @@ import static java.util.Optional.ofNullable;
 @Component
 public class TrelloClient {
 
-    @Value("${trello.apiendpoint.prod}")
+    @Value("${trello.api.endpoint.prod}")
     private String trelloApiEndpoint;
     @Value("${trello.app.key}")
     private String trelloAppKey;
@@ -30,7 +34,43 @@ public class TrelloClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    public List<TrelloBoardDto> getTrelloBoards() {
 
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/zuzannalubben/boards")
+                .queryParam("key", trelloAppKey)
+                .queryParam("token", trelloAppToken)
+                .queryParam("fields", "name,%20id")
+                .queryParam("lists", "all").build().encode().toUri();
+
+        TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
+
+        if (boardsResponse != null) {
+            return Arrays.asList(boardsResponse);
+        }
+        return new ArrayList<>();
+
+    }
+
+    public CreatedTrelloCard createNewCard(TrelloCardDto trelloCardDto){
+
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/cards")
+                .queryParam("key", trelloAppKey)
+                .queryParam("token", trelloAppToken)
+                .queryParam("name", trelloCardDto.getName())
+                .queryParam("desc", trelloCardDto.getDescription())
+                .queryParam("pos", trelloCardDto.getPos())
+                .queryParam("idList", trelloCardDto.getListId()).build().encode().toUri();
+
+        return restTemplate.postForObject(url, null, CreatedTrelloCard.class);
+    }
+
+
+}
+
+
+
+
+    /*
     private URI getUrl() {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/zuzannalubben/boards")
                 .queryParam("key", trelloAppKey)
@@ -41,9 +81,12 @@ public class TrelloClient {
         return url;
     }
 
-    public Optional<List<TrelloBoardDto>> getTrelloBoards() {
-        TrelloBoardDto[] boardsResponse = restTemplate.getForObject(getUrl(), TrelloBoardDto[].class);
-        return Optional.of(Arrays.asList(ofNullable(boardsResponse).orElse(new TrelloBoardDto[0])));
-        //return Optional.ofNullable(Arrays.asList(boardsResponse));
+
+    public List<TrelloBoardDto> getTrelloBoards() {
+
+        TrelloBoardDto[] boardsResponse = restTemplate.getForObject(
+                getUrl(), TrelloBoardDto[].class);
+        return Arrays.asList(ofNullable(boardsResponse).orElse(new TrelloBoardDto[0]));
     }
 }
+     */
