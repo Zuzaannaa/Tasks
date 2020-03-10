@@ -1,5 +1,6 @@
 package com.crud.tasks.trello.client;
 
+import com.crud.tasks.domain.CreatedTrelloCard;
 import com.crud.tasks.domain.TrelloBoardDto;
 import com.crud.tasks.trello.config.TrelloConfig;
 import org.junit.Assert;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-//@SpringBootTest
+@SpringBootTest
 public class TrelloClientTest {
 
     @InjectMocks
@@ -36,6 +37,7 @@ public class TrelloClientTest {
     @Test
     public void shouldFetchTrelloBoards() throws URISyntaxException {
         //Given
+        when(trelloConfig.getTrelloUsername()).thenReturn("zuzannalubben");
         when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
         when(trelloConfig.getTrelloAppKey()).thenReturn("test");
         when(trelloConfig.getTrelloAppToken()).thenReturn("test");
@@ -45,7 +47,9 @@ public class TrelloClientTest {
 
         URI uri = new URI("http://test.com/members/zuzannalubben/boards?key=test&token=test&fields=name,id&lists=all");
 
-        when(restTemplate.getForObject(uri, TrelloBoardDto[].class));
+
+
+        when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(trelloBoards);
 
         //When
 
@@ -53,7 +57,7 @@ public class TrelloClientTest {
 
         //Then
 
-        Assert.assertEquals(5, fetchedTrelloBoards.size());
+        Assert.assertEquals(1, fetchedTrelloBoards.size());
         Assert.assertEquals("test_id", fetchedTrelloBoards.get(0).getId());
         Assert.assertEquals("test_board", fetchedTrelloBoards.get(0).getName());
         Assert.assertEquals(new ArrayList<>(), fetchedTrelloBoards.get(0).getLists());
