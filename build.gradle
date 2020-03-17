@@ -3,7 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
-	//id 'war'
+	id 'war'
 }
 
 group = 'com.crud'
@@ -25,7 +25,7 @@ dependencies {
 	}
 	implementation 'junit:junit:4.12'
 	//testCompile group: 'org.mockito', name: 'mockito-core', version: '3.3.0'
-	//providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
 
 
