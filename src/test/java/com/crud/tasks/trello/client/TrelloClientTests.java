@@ -1,33 +1,31 @@
 package com.crud.tasks.trello.client;
 
-import com.crud.tasks.domain.CreatedTrelloCard;
 import static org.mockito.ArgumentMatchers.any;
-import com.crud.tasks.domain.TrelloBoardDto;
-import com.crud.tasks.domain.TrelloCardDto;
-import com.crud.tasks.trello.config.TrelloConfig;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
+import static org.mockito.Mockito.when;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
+import com.crud.tasks.domain.CreatedTrelloCard;
+import com.crud.tasks.domain.TrelloBoardDto;
+import com.crud.tasks.domain.TrelloCardDto;
+import com.crud.tasks.trello.config.TrelloConfig;
 
-@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class TrelloClientTest {
+@RunWith(SpringRunner.class)
+public class TrelloClientTests {
 
     @InjectMocks
     private TrelloClient trelloClient;
@@ -40,6 +38,7 @@ public class TrelloClientTest {
 
     @Before
     public void init(){
+    	
 
         when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
         when(trelloConfig.getTrelloAppKey()).thenReturn("test");
@@ -48,9 +47,9 @@ public class TrelloClientTest {
     }
 
     @Test
-    public void shouldFetchTrelloBoards() throws URISyntaxException {
+    public void shouldFetchTrelloBoardsTest() throws URISyntaxException {
         //Given
-        when(trelloConfig.getTrelloUsername()).thenReturn("zuzannalubben");
+        //when(trelloConfig.getTrelloUsername()).thenReturn("zuzannalubben");
         when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
         when(trelloConfig.getTrelloAppKey()).thenReturn("test");
         when(trelloConfig.getTrelloAppToken()).thenReturn("test");
@@ -59,12 +58,12 @@ public class TrelloClientTest {
         trelloBoards[0] = new TrelloBoardDto("test_id", "test_board", new ArrayList<>());
 
         //URI uri = new URI("http://test.com/members/zuzannalubben/boards?key=test&token=test&fields=name,id&lists=all");
-        URI uri = new URI("http://test.com/members/zuzannalubben/boards?key=test&token=test&fields=name,%20id&lists=all");
+        URI uri = new URI("http://test.com/members/zuzannalubben/boards?key=test&token=test&fields=name,id&lists=all");
 
 
 
-        when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(trelloBoards);
-        //when(restTemplate.getForObject(any(URI.class), any())).thenReturn(trelloBoards);
+        //when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(trelloBoards);
+        when(restTemplate.getForObject(any(URI.class), any())).thenReturn(trelloBoards);
 
         //When
 
@@ -79,7 +78,7 @@ public class TrelloClientTest {
     }
 
     @Test
-    public void shouldCreateCard() throws URISyntaxException {
+    public void shouldCreateCardTest() throws URISyntaxException {
         //Given
         TrelloCardDto trelloCardDto = new TrelloCardDto("Test task", "Test description", "top", "test_id");
 
@@ -98,8 +97,8 @@ public class TrelloClientTest {
 
         //Then
         Assert.assertEquals("1", newCard.getId());
-        Assert.assertEquals ("Test task", newCard.getName());
-        Assert.assertEquals ("http://test.com", newCard.getShortUrl());
+        Assert.assertEquals("Test task", newCard.getName());
+        Assert.assertEquals("http://test.com", newCard.getShortUrl());
     }
 
     @Test
