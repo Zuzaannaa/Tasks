@@ -18,7 +18,8 @@ dependencies {
 	compileOnly('org.projectlombok:lombok')
 	annotationProcessor('org.projectlombok:lombok')
 	compile ('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile ('mysql:mysql-connector-java')
+	//compile ('mysql:mysql-connector-java')
+	compile('org.postgresql:postgresql')
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
@@ -44,6 +45,6 @@ testCompile('org.springframework.boot:spring-boot-starter-test')
 test {
 	useJUnitPlatform()
 }
-}
+
 
 
